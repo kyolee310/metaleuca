@@ -51,7 +51,7 @@ metaleuca-describe-system-groups	- describe system groups; written in a text fil
 
 metaleuca-reserve-systems		- reserve systems under user; need to talk to DB
 
-metaleuca-release-systems		- release systems by IPs; unclear if it's the right way to do; need to talk to DB
+metaleuca-release-systems		- release systems by IPs; unclear if it is the right way to do; need to talk to DB
 
 ### COMMANDS EXPOSED TO USERS ###
 
@@ -105,4 +105,5 @@ Create a separate DB that is configurable
 
 Use NoSQL
 
-Guideline on how to set up Cobbler server
+Provide Guideline on how to set up Cobbler server
+
