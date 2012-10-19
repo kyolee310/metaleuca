@@ -15,10 +15,9 @@ metaleuca-terminate-instances
 
 Using Metaleuca, a user can select an image(profile) and a set of bare-metal machines(systems), then launch those machines to boot up with the selected image using the command-line tools that feel very much like the EC2 tools, or euca2ools. In other words, instead of launching virtual instances, the user is able to self-provision bare-metal instances, which are managed like EC2 instances.
 
-#### What are the components of Metaleuca? ####
+## What are the components of Metaleuca? ##
 
 ### Metaleuca Service Layer (Metaleuca SLayer) ###
-
 
 Metaleuca Service Layer, a.k.a Metaleuca Slayer, is a lightweight service layer that manages sequencing of operations that handles launching of bare-metal instances, keeping track of status and resources, and terminating instances; all the information is maintained in Metaleuca's own database that is external to Cobbler's database.
 
@@ -26,7 +25,7 @@ Metaleuca Service Layer, a.k.a Metaleuca Slayer, is a lightweight service layer 
 
 Metaleuca2ools is a set of CLIs that are exposed to users so that they can directly interact with Metaleuca, similar to EC2 tools and euca2ools.
 
-##### METALEUCA COMMANDS #####
+## METALEUCA COMMANDS ##
 
 ### INTERNAL COMMANDS ###
 
@@ -74,10 +73,9 @@ talktocobbler.py
 
 
 
-##### TO DO #####
+## TO DO ##
 
-Need to be able to run instances using IPs
-   DONE 090312
+Need to be able to run instances using IPs -- DONE 090312
 
 Need a way to handle reboot and identify reboot has taken place
 
@@ -85,8 +83,7 @@ Need a way to keep status of running instances
 
 Need a DB to track the status rather than relying on "netboot_enabled" flag.
 
-Need a way to run instances by providing more than one group
-   DONE 090312
+Need a way to run instances by providing more than one group -- DONE 090312
 
 Need a way to determine when "pending" should become "failed"
 
@@ -94,7 +91,7 @@ Need to track time and timeout per instance run
 
 Need to be able to use IPs directly rather than using name for most calls
 
-### GOOD TO HAVE ###
+## GOOD TO HAVE ##
 
 Use a credentials file, similar to "eucarc" to hold username, prefered group, cobbler ip, username and password
 
@@ -104,4 +101,4 @@ Create a separate DB that is configurable
 
 Use NoSQL
 
-
+Guideline on how to set up Cobbler server
