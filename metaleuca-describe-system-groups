@@ -1,0 +1,54 @@
+#!/usr/bin/python
+
+import re
+import sys
+import xmlrpclib
+import resource_manager
+from resource_manager import *
+from optparse import OptionParser
+
+def cb(option, opt_str, value, parser):
+        args=[]
+        for arg in parser.rargs:
+                if arg[0] != "-":
+                        args.append(arg)
+                else:
+                        del parser.rargs[:len(args)]
+                        break
+        if getattr(parser.values, option.dest):
+                args.extend(getattr(parser.values, option.dest))
+        setattr(parser.values, option.dest, args)
+
+
+def main():
+
+	print "METALEUCA DESCRIBE SYSTEM GROUPS"
+
+	parser = OptionParser()
+	parser.add_option("-g", "--group", action="callback", callback=cb, dest="group", help="group names")
+	parser.add_option("-f", "--freed", action="store_true", dest="freed", default=False, help="display only freed")
+	(options, args) = parser.parse_args()
+
+	rmanager = ResourceManager();
+
+	group_str = ""
+
+	if options.group is None:
+		group_str = "_ALL"
+	else:
+		for group in options.group:
+			group_str += group + " "
+		group_str = group_str.rstrip(" ")
+
+	group_list = group_str.split(" ")
+
+	for group in group_list:
+		if options.freed is True:
+			print rmanager.display_only_freed_group_by_name(group)
+		else:
+			print rmanager.display_group_by_name(group)
+
+if __name__ == "__main__":
+    main()
+    exit
+

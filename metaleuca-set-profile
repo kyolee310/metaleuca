@@ -1,0 +1,51 @@
+#!/usr/bin/python
+
+import re
+import sys
+import xmlrpclib
+import metaleuca
+from metaleuca import *
+from optparse import OptionParser
+
+def main():
+
+	print "METALEUCA SET PROFILE"
+
+	parser = OptionParser()
+	parser.add_option("-n", "--name", dest="name", help="name of the system")
+	parser.add_option("-i", "--ip", dest="ip", help="ip of the system")
+	parser.add_option("-p", "--profile", dest="profile", help="profile to be set")
+	(options, args) = parser.parse_args()
+
+	metaleuca = Metaleuca();
+	server, token = metaleuca.connect()
+
+	if options.profile is None:
+		print "Need Input profile; Use --help Option"
+		exit()
+
+	if not metaleuca.validate_profile_by_name(server, options.profile):
+		print "Invalid Input profile: " + options.profile
+		exit()
+
+	if options.name is not None:
+		if not metaleuca.validate_system_by_name(server, options.name):
+			print "Invalid Input name: " + options.name
+			exit()
+
+	if options.ip is not None:
+		if not metaleuca.validate_system_by_ip(server, options.ip):
+			print "Invalid Input ip: " + options.ip
+			exit()
+
+	if options.ip is not None:
+		name = metaleuca.get_system_name_found_by_ip(server, options.ip)
+		print "Name: " + name + " Ip: " + options.ip
+		metaleuca.change_system_found_by_name_modify_its_profile(server, token, name, options.profile)
+	else:
+		metaleuca.change_system_found_by_name_modify_its_profile(server, token, options.name, options.profile)	
+
+if __name__ == "__main__":
+    main()
+    exit
+
