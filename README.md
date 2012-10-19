@@ -15,6 +15,10 @@ metaleuca-terminate-instances
 
 Using Metaleuca, a user can select an image(profile) and a set of bare-metal machines(systems), then launch those machines to boot up with the selected image using the command-line tools that feel very much like the EC2 tools, or euca2ools. In other words, instead of launching virtual instances, the user is able to self-provision bare-metal instances, which are managed like EC2 instances.
 
+## Open Source Licence ##
+
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements. 
+
 ## What are the components of Metaleuca? ##
 
 ### Metaleuca Service Layer (Metaleuca SLayer) ###
