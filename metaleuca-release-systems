@@ -47,8 +47,14 @@ def main():
 	parser.add_option("-i", "--ip", action="callback", callback=cb, dest="ip", help="ip")
 	(options, args) = parser.parse_args()
 
+	### READ metaleuca.ini CONFIG FILE for HOME DIRECTORY
+	config_file = "./var/metaleuca.ini"
+	Config = ConfigParser.ConfigParser()
+	Config.read(config_file)
+	machine_pool_manager_dir = Config.get("MachinePoolManagerInfo", "MACHINE_POOL_MANAGER_DIR")
+
 	if options.user is not None:
-		print commands.getoutput("perl /home/qa-server/lib/machine_pool_manager/free_all_machines_by_owner.pl " + options.user)
+		print commands.getoutput("cd " + machine_pool_manager_dir + "; perl ./free_all_machines_by_owner.pl " + options.user)
 	else:
 		if options.ip is None:
 			print "Need Input ip; Use --help Option"
@@ -57,7 +63,7 @@ def main():
 		release_list = ' '.join(options.ip)
 		print release_list
 
-		print commands.getoutput("perl /home/qa-server/lib/machine_pool_manager/free_machine.pl " + release_list)
+		print commands.getoutput("cd " + machine_pool_manager_dir + "; perl ./free_machine.pl " + release_list)
 
 	exit()
 

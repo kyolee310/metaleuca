@@ -113,12 +113,14 @@ def main():
 	for ip in ip_list:
 		system_info = commands.getoutput("./metaleuca-describe-systems | grep " + ip)
 		system_name = system_info.split(" ")[1]
-		name_list.append(system_name)
+		if re.match( r"^\w+-\d+", system_name ):
+			name_list.append(system_name)
 
 	for name in name_list:
-		print
+		print 
 		if options.profile is not "DEFAULT":
 			print commands.getoutput("./metaleuca-set-profile -n " + name + " -p " + options.profile)
+			print
 		print commands.getoutput("./metaleuca-enable-netboot -n " + name)
 
 	print

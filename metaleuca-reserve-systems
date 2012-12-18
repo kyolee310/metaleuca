@@ -50,6 +50,13 @@ def main():
 	parser.add_option("-u", "--user", dest="user", help="user name")
 	(options, args) = parser.parse_args()
 
+	### READ metaleuca.ini CONFIG FILE for HOME DIRECTORY
+	config_file = "./var/metaleuca.ini"
+	Config = ConfigParser.ConfigParser()
+	Config.read(config_file)
+	machine_pool_manager_dir = Config.get("MachinePoolManagerInfo", "MACHINE_POOL_MANAGER_DIR")
+
+	### INITIALIZE Metaleuca CLASS
 	metaleuca = Metaleuca();
 	server, token = metaleuca.connect()
 
@@ -99,7 +106,7 @@ def main():
 	else:	
 		selected_ips = ip_str
 
-	print commands.getoutput("perl /home/qa-server/lib/machine_pool_manager/reserve_machine.pl " + options.user + " " + selected_ips)
+	print commands.getoutput("cd " + machine_pool_manager_dir + "; perl ./reserve_machine.pl " + options.user + " " + selected_ips)
 
 
 if __name__ == "__main__":

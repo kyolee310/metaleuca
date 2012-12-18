@@ -28,8 +28,13 @@ import ConfigParser
 
 class Metaleuca:
 
+	### STATIC VARIABLE
 	TEMP_GROUP_FILE = "./var/temp_machine_map_for_cobbler.lst"
-	
+
+	### CLASS VARIABLE
+	target_owner = "qa"
+	metaleuca_dir = "/home/qa-group/metaleuca"
+		
 	def connect(self):
 		### Conncet to Cobbler using Default Configuration
 		config_file = "./var/metaleuca.ini"
@@ -41,6 +46,15 @@ class Metaleuca:
 		cobbler_user = Config.get("CobblerInfo", "USER")
 		cobbler_password = Config.get("CobblerInfo", "PASSWORD")
 
+		### CLASS VARIABLE INITALIZATION -- SHOULD BE IN A CLASS INITIALIZE FUNCTION		
+		self.target_owner = Config.get("CobblerInfo", "OWNER")
+		if( self.target_owner == ""):
+			self.target_owner = "qa"
+		self.metaleuca_dir = Config.get("MetaleucaInfo", "METALEUCA_DIR")
+                if( self.metaleuca_dir == ""):
+                        self.metaleuca_dir = "/home/qa-group/metaleuca"
+
+		### CONNECT TO COBBLER
 	    	remote = xmlrpclib.Server("http://" + cobbler_server + "/cobbler_api")
 	    	token = remote.login(cobbler_user, cobbler_password)
 
@@ -88,14 +102,15 @@ class Metaleuca:
 			profile = x['profile']
 			status = x['status']
 			netboot_enabled = x['netboot_enabled']
-			owner = x['owners'][0]			
+			owner = ""
+			if len(x['owners']) > 0:
+				owner = x['owners'][0]			
 			for device in x['interfaces']:
 				if device == "eth0" or device == "em1":
 					ip = x['interfaces'][device]['ip_address']
 					mac = x['interfaces'][device]['mac_address']
-	#		if re.match(r"^r2-", hostname): 
-	#			print "Name: " + name + " IP: " + ip + " MAC: " + mac + " HOSTNAME: " + hostname + " PROFILE: " + profile + " STATUS: " + status + " NETBOOT_ENABLED: " + str(netboot_enabled)
-			if re.match(r"^qa", owner): 
+		#	if re.match(r"^qa$", owner): 
+			if owner == self.target_owner:
 				print "Name: " + name + " OWNER: " + owner + " IP: " + ip + " MAC: " + mac + " HOSTNAME: " + hostname + " PROFILE: " + profile + " NETBOOT_ENABLED: " + str(netboot_enabled)
 
 
