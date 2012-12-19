@@ -23,15 +23,33 @@ import re
 import sys
 import commands
 import MySQLdb as mdb
+import ConfigParser
 
 class ResourceManager:
 
-#	TEMP_GROUP_FILE = "./var/temp_machine_map_for_cobbler.lst"
-	TEMP_GROUP_FILE = "./var/machine_map_for_new_datacenter.lst"
+	### STATIC VARIABLE
+	GROUP_FILE = "./var/machine_map_for_new_datacenter.lst"
+	CONFIG_FILE = "./var/metaleuca.ini"
 
+	### CLASS VARIABLE
+	db_host = ""
+	db_user = ""
+	db_password = ""
+	db_name = ""
+
+	def __init__(self):
+		Config = ConfigParser.ConfigParser()
+		Config.read(self.CONFIG_FILE)
+
+		self.db_host = Config.get("DBInfo", "HOST")
+		self.db_user = Config.get("DBInfo", "USER")
+		self.db_password = Config.get("DBInfo", "PASSWORD")
+		self.db_name = Config.get("DBInfo", "NAME")
+
+		return
 
 	def display_group_by_name(self, group):
-		cmd = "cat " + self.TEMP_GROUP_FILE				###	QUICK HACK, Prefers DB
+		cmd = "cat " + self.GROUP_FILE				###	QUICK HACK, Prefers DB
 		if group is "_ALL":
 			return commands.getoutput(cmd)
 		else:
@@ -61,7 +79,7 @@ class ResourceManager:
 
 
 	def display_user_by_name(self, user):
-		con = mdb.connect('localhost', 'root', 'foobar', 'eucaqa');
+		con = mdb.connect(self.db_host, self.db_user, self.db_password, self.db_name);
 		with con: 
     			cur = con.cursor(mdb.cursors.DictCursor)
 			if user is "_ALL":

@@ -29,36 +29,37 @@ import ConfigParser
 class Metaleuca:
 
 	### STATIC VARIABLE
-	TEMP_GROUP_FILE = "./var/temp_machine_map_for_cobbler.lst"
+	GROUP_FILE = "./var/machine_map_for_new_datacenter.lst"
+	CONFIG_FILE = "./var/metaleuca.ini"
 
 	### CLASS VARIABLE
+	cobbler_server = ""
+	cobbler_user = ""
+	cobbler_password = ""
+
 	target_owner = "qa"
 	metaleuca_dir = "/home/qa-group/metaleuca"
-		
-	def connect(self):
-		### Conncet to Cobbler using Default Configuration
-		config_file = "./var/metaleuca.ini"
-		
+
+	def __init__(self):
 		Config = ConfigParser.ConfigParser()
-		Config.read(config_file)
+		Config.read(self.CONFIG_FILE)
 
-		cobbler_server = Config.get("CobblerInfo", "COBBLER_SERVER")
-		cobbler_user = Config.get("CobblerInfo", "USER")
-		cobbler_password = Config.get("CobblerInfo", "PASSWORD")
+		self.cobbler_server = Config.get("CobblerInfo", "COBBLER_SERVER")
+		self.cobbler_user = Config.get("CobblerInfo", "USER")
+		self.cobbler_password = Config.get("CobblerInfo", "PASSWORD")
 
-		### CLASS VARIABLE INITALIZATION -- SHOULD BE IN A CLASS INITIALIZE FUNCTION		
 		self.target_owner = Config.get("CobblerInfo", "OWNER")
 		if( self.target_owner == ""):
 			self.target_owner = "qa"
 		self.metaleuca_dir = Config.get("MetaleucaInfo", "METALEUCA_DIR")
                 if( self.metaleuca_dir == ""):
                         self.metaleuca_dir = "/home/qa-group/metaleuca"
-
-		### CONNECT TO COBBLER
-	    	remote = xmlrpclib.Server("http://" + cobbler_server + "/cobbler_api")
-	    	token = remote.login(cobbler_user, cobbler_password)
-
-	    	return remote, token
+		return
+		
+	def connect(self):
+		remote = xmlrpclib.Server("http://" + self.cobbler_server + "/cobbler_api")
+		token = remote.login(self.cobbler_user, self.cobbler_password)
+		return remote, token
 
 
 	def connect_to_cobbler(self, server, username, password):
@@ -129,7 +130,7 @@ class Metaleuca:
 				print "Name: " + name + " IP: " + ip + " MAC: " + mac + " HOSTNAME: " + hostname + " PROFILE: " + profile + " STATUS: " + status + " NETBOOT_ENABLED: " + str(netboot_enabled)
 
 	def display_group_by_name(self, server, token, group):
-		cmd = "cat " + self.TEMP_GROUP_FILE				###	QUICK HACK, Prefers DB
+		cmd = "cat " + self.GROUP_FILE				###	QUICK HACK, Prefers DB
 		if group is "_ALL":
 			print commands.getoutput(cmd)
 		else:
